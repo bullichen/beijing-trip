@@ -1,1 +1,1387 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
 
+<meta charset="utf-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+name="theme-color"
+content="#16a34a"
+>
+
+<title>
+行李 Checklist - 北京十一旅行助手
+</title>
+
+
+<style>
+
+:root{
+  --bg:#f5f7fb;
+  --line:#e5e7eb;
+  --text:#172033;
+  --muted:#6b7280;
+  --green:#16a34a;
+  --blue:#2563eb;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "PingFang SC",
+  "Microsoft YaHei",
+  sans-serif;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(245,247,251,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+
+.head{
+  max-width:760px;
+  margin:auto;
+  padding:11px 13px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.home{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  text-decoration:none;
+  background:#fff;
+  border-radius:12px;
+  color:#172033;
+  font-size:20px;
+}
+
+h1{
+  font-size:19px;
+  margin:0;
+}
+
+.sub{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.wrap{
+  max-width:760px;
+  margin:auto;
+  padding:12px 12px 90px;
+}
+
+.progress-card{
+  background:
+  linear-gradient(
+    135deg,
+    #ecfdf5,
+    #f8fffb
+  );
+
+  border:1px solid #bbf7d0;
+  border-radius:16px;
+  padding:14px;
+  margin-bottom:12px;
+}
+
+.progress-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+}
+
+.progress-num{
+  font-size:24px;
+  font-weight:900;
+  color:#15803d;
+}
+
+.progress-label{
+  font-size:12px;
+  color:#64748b;
+}
+
+.track{
+  height:9px;
+  background:#d1fae5;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.fill{
+  height:100%;
+  background:#16a34a;
+  width:0;
+  transition:.2s;
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  margin:10px 0;
+}
+
+.toolbar button{
+  flex:1;
+}
+
+button{
+  border:0;
+  border-radius:11px;
+  padding:10px 12px;
+  font-weight:650;
+  font-size:14px;
+  background:#e8eefc;
+  color:#174ea6;
+}
+
+button.primary{
+  background:#16a34a;
+  color:#fff;
+}
+
+.filter{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  margin-bottom:10px;
+}
+
+.filter button{
+  white-space:nowrap;
+  padding:8px 11px;
+  font-size:12px;
+}
+
+.filter button.active{
+  background:#172033;
+  color:#fff;
+}
+
+.group{
+  margin-top:16px;
+}
+
+.group-title{
+  display:flex;
+  justify-content:space-between;
+  margin:0 4px 7px;
+  font-size:14px;
+  font-weight:800;
+}
+
+.group-title span{
+  font-size:11px;
+  color:var(--muted);
+}
+
+.item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:11px 10px;
+  margin-bottom:7px;
+}
+
+.check{
+  width:28px;
+  height:28px;
+  min-width:28px;
+  border-radius:9px;
+  border:1.5px solid #cbd5e1;
+  background:#fff;
+  padding:0;
+  color:#fff;
+}
+
+.item.checked .check{
+  background:#16a34a;
+  border-color:#16a34a;
+}
+
+.main{
+  flex:1;
+  min-width:0;
+}
+
+.name{
+  font-size:14px;
+  font-weight:700;
+}
+
+.item.checked .name{
+  text-decoration:line-through;
+  color:#94a3b8;
+}
+
+.note{
+  font-size:11px;
+  color:#8791a1;
+  margin-top:2px;
+}
+
+.actions{
+  display:flex;
+  gap:5px;
+}
+
+.icon{
+  width:32px;
+  height:32px;
+  padding:0;
+  background:#f2f5f9;
+  color:#64748b;
+}
+
+.empty{
+  text-align:center;
+  color:#94a3b8;
+  padding:40px 10px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  z-index:50;
+  align-items:flex-end;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.sheet{
+  background:#fff;
+  width:100%;
+  max-width:760px;
+  margin:auto;
+  border-radius:20px 20px 0 0;
+  padding:17px;
+  max-height:92vh;
+  overflow:auto;
+}
+
+.sheet h2{
+  margin:0 0 14px;
+  font-size:19px;
+}
+
+label{
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#4b5563;
+  margin:10px 0 5px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid #d7dce5;
+  border-radius:10px;
+  padding:10px;
+  background:#fff;
+}
+
+textarea{
+  min-height:70px;
+  resize:vertical;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.form-actions{
+  display:flex;
+  gap:8px;
+  margin-top:15px;
+}
+
+.form-actions button{
+  flex:1;
+}
+
+@media(min-width:700px){
+
+  .modal{
+    align-items:center;
+  }
+
+  .sheet{
+    border-radius:20px;
+    max-width:650px;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<div class="head">
+
+<a
+class="home"
+href="../"
+>
+⌂
+</a>
+
+<div>
+
+<h1>
+🧳 行李 Checklist
+</h1>
+
+<div class="sub">
+出发前逐项检查必需品
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<main class="wrap">
+
+
+<div class="progress-card">
+
+<div class="progress-top">
+
+<div>
+
+<div
+class="progress-num"
+id="num"
+>
+0 / 0
+</div>
+
+<div class="progress-label">
+已准备 / 全部物品
+</div>
+
+</div>
+
+
+<div
+class="progress-label"
+id="pct"
+>
+0%
+</div>
+
+</div>
+
+
+<div class="track">
+
+<div
+class="fill"
+id="fill"
+></div>
+
+</div>
+
+</div>
+
+
+<div class="toolbar">
+
+<button
+class="primary"
+onclick="openAdd()"
+>
+＋ 添加物品
+</button>
+
+<button
+onclick="markAll(false)"
+>
+全部取消
+</button>
+
+<button
+onclick="markAll(true)"
+>
+全部完成
+</button>
+
+</div>
+
+
+<div class="filter">
+
+<button
+class="active"
+onclick="setFilter('all',this)"
+>
+全部
+</button>
+
+<button
+onclick="setFilter('todo',this)"
+>
+未准备
+</button>
+
+<button
+onclick="setFilter('done',this)"
+>
+已准备
+</button>
+
+</div>
+
+
+<div id="list"></div>
+
+
+</main>
+
+
+<div
+class="modal"
+id="modal"
+>
+
+<div class="sheet">
+
+<h2 id="title">
+添加物品
+</h2>
+
+
+<div class="grid">
+
+
+<div class="full">
+
+<label>
+物品名称
+</label>
+
+<input
+id="p_name"
+placeholder="例如：充电宝"
+>
+
+</div>
+
+
+<div>
+
+<label>
+分类
+</label>
+
+<select id="p_category">
+
+<option>
+证件与票务
+</option>
+
+<option>
+电子设备
+</option>
+
+<option>
+衣物
+</option>
+
+<option>
+洗护用品
+</option>
+
+<option>
+药品与健康
+</option>
+
+<option>
+出行用品
+</option>
+
+<option>
+其他
+</option>
+
+</select>
+
+</div>
+
+
+<div>
+
+<label>
+状态
+</label>
+
+<select id="p_checked">
+
+<option value="false">
+未准备
+</option>
+
+<option value="true">
+已准备
+</option>
+
+</select>
+
+</div>
+
+
+<div class="full">
+
+<label>
+备注
+</label>
+
+<textarea
+id="p_note"
+placeholder="例如：原件随身携带"
+></textarea>
+
+</div>
+
+
+</div>
+
+
+<div class="form-actions">
+
+<button
+onclick="closeModal()"
+>
+取消
+</button>
+
+<button
+class="primary"
+onclick="saveItem()"
+>
+保存
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+const KEY =
+'beijing_october_packing_v1';
+
+
+const defaults = [
+
+{
+id:101,
+name:'身份证',
+category:'证件与票务',
+note:'原件随身携带',
+checked:false
+},
+
+{
+id:102,
+name:'预约信息 / 订单截图',
+category:'证件与票务',
+note:'重要预约建议提前截图',
+checked:false
+},
+
+{
+id:103,
+name:'手机',
+category:'电子设备',
+note:'出门前充满电',
+checked:false
+},
+
+{
+id:104,
+name:'充电器 / 数据线',
+category:'电子设备',
+note:'确认接口匹配',
+checked:false
+},
+
+{
+id:105,
+name:'充电宝',
+category:'电子设备',
+note:'提前充满电',
+checked:false
+},
+
+{
+id:106,
+name:'耳机',
+category:'电子设备',
+note:'高铁或飞机途中使用',
+checked:false
+},
+
+{
+id:107,
+name:'换洗上衣',
+category:'衣物',
+note:'按行程天数准备',
+checked:false
+},
+
+{
+id:108,
+name:'裤子',
+category:'衣物',
+note:'舒适、方便步行',
+checked:false
+},
+
+{
+id:109,
+name:'外套',
+category:'衣物',
+note:'北京早晚温差较大时备用',
+checked:false
+},
+
+{
+id:110,
+name:'舒适的鞋',
+category:'衣物',
+note:'景点步行较多',
+checked:false
+},
+
+{
+id:111,
+name:'牙刷 / 牙膏',
+category:'洗护用品',
+note:'',
+checked:false
+},
+
+{
+id:112,
+name:'洗面奶 / 护肤品',
+category:'洗护用品',
+note:'按个人需要',
+checked:false
+},
+
+{
+id:113,
+name:'防晒霜',
+category:'洗护用品',
+note:'户外行程使用',
+checked:false
+},
+
+{
+id:114,
+name:'常用药',
+category:'药品与健康',
+note:'个人长期用药优先',
+checked:false
+},
+
+{
+id:115,
+name:'创可贴',
+category:'药品与健康',
+note:'步行磨脚等情况备用',
+checked:false
+},
+
+{
+id:116,
+name:'纸巾 / 湿巾',
+category:'出行用品',
+note:'',
+checked:false
+},
+
+{
+id:117,
+name:'雨伞',
+category:'出行用品',
+note:'晴雨两用更方便',
+checked:false
+},
+
+{
+id:118,
+name:'水杯',
+category:'出行用品',
+note:'',
+checked:false
+},
+
+{
+id:119,
+name:'口罩',
+category:'出行用品',
+note:'按个人需要',
+checked:false
+},
+
+{
+id:120,
+name:'小背包',
+category:'出行用品',
+note:'景点当天随身携带',
+checked:false
+}
+
+];
+
+
+let items =
+JSON.parse(
+  localStorage.getItem(KEY)
+  ||
+  'null'
+)
+||
+defaults;
+
+
+let editingId =
+null;
+
+
+let filter =
+'all';
+
+
+function escapeHTML(s){
+
+return String(s ?? '')
+.replace(
+  /[&<>"']/g,
+  c => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[c])
+);
+
+}
+
+
+function save(){
+
+localStorage.setItem(
+  KEY,
+  JSON.stringify(items)
+);
+
+render();
+
+}
+
+
+function render(){
+
+const total =
+items.length;
+
+
+const done =
+items.filter(
+  x => x.checked
+).length;
+
+
+const percent =
+total
+?
+Math.round(
+  done / total * 100
+)
+:
+0;
+
+
+document
+.getElementById('num')
+.textContent =
+done
++
+' / '
++
+total;
+
+
+document
+.getElementById('pct')
+.textContent =
+percent
++
+'%';
+
+
+document
+.getElementById('fill')
+.style.width =
+percent
++
+'%';
+
+
+const visible =
+items.filter(
+  x =>
+  filter === 'all'
+  ||
+  (
+    filter === 'done'
+    ?
+    x.checked
+    :
+    !x.checked
+  )
+);
+
+
+const groups = {};
+
+
+visible.forEach(
+x => {
+
+  const category =
+  x.category || '其他';
+
+
+  if(
+    !groups[category]
+  ){
+
+    groups[category] = [];
+
+  }
+
+
+  groups[category]
+  .push(x);
+
+}
+);
+
+
+const order = [
+
+'证件与票务',
+'电子设备',
+'衣物',
+'洗护用品',
+'药品与健康',
+'出行用品',
+'其他'
+
+];
+
+
+let out = '';
+
+
+order.forEach(
+category => {
+
+  const group =
+  groups[category];
+
+
+  if(
+    !group
+    ||
+    !group.length
+  ){
+
+    return;
+
+  }
+
+
+  const groupDone =
+  group.filter(
+    x => x.checked
+  ).length;
+
+
+  out +=
+  `
+
+  <div class="group">
+
+    <div class="group-title">
+
+      <div>
+        ${escapeHTML(category)}
+      </div>
+
+      <span>
+        ${groupDone}/${group.length}
+      </span>
+
+    </div>
+
+  `;
+
+
+  group.forEach(
+  x => {
+
+    out +=
+    `
+
+    <div
+    class="item ${
+      x.checked
+      ?
+      'checked'
+      :
+      ''
+    }"
+    >
+
+      <button
+      class="check"
+      onclick="toggle(${x.id})"
+      >
+        ${
+          x.checked
+          ?
+          '✓'
+          :
+          ''
+        }
+      </button>
+
+
+      <div
+      class="main"
+      onclick="toggle(${x.id})"
+      >
+
+        <div class="name">
+          ${escapeHTML(x.name)}
+        </div>
+
+        ${
+          x.note
+          ?
+          `<div class="note">
+          ${escapeHTML(x.note)}
+          </div>`
+          :
+          ''
+        }
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+        class="icon"
+        onclick="editItem(${x.id})"
+        >
+          ✎
+        </button>
+
+        <button
+        class="icon"
+        onclick="removeItem(${x.id})"
+        >
+          ×
+        </button>
+
+      </div>
+
+    </div>
+
+    `;
+
+  });
+
+
+  out +=
+  '</div>';
+
+}
+);
+
+
+document
+.getElementById('list')
+.innerHTML =
+out
+||
+'<div class="empty">当前筛选条件下没有物品。</div>';
+
+}
+
+
+function setFilter(
+newFilter,
+button
+){
+
+filter =
+newFilter;
+
+
+document
+.querySelectorAll(
+  '.filter button'
+)
+.forEach(
+b => {
+
+  b.classList
+  .remove('active');
+
+}
+);
+
+
+button
+.classList
+.add('active');
+
+
+render();
+
+}
+
+
+function toggle(id){
+
+const item =
+items.find(
+  x => x.id === id
+);
+
+
+if(!item){
+  return;
+}
+
+
+item.checked =
+!item.checked;
+
+
+save();
+
+}
+
+
+function markAll(value){
+
+items.forEach(
+  x => {
+
+    x.checked =
+    value;
+
+  }
+);
+
+
+save();
+
+}
+
+
+function openAdd(){
+
+editingId =
+null;
+
+
+document
+.getElementById('title')
+.textContent =
+'添加物品';
+
+
+document
+.getElementById('p_name')
+.value =
+'';
+
+
+document
+.getElementById('p_category')
+.value =
+'出行用品';
+
+
+document
+.getElementById('p_checked')
+.value =
+'false';
+
+
+document
+.getElementById('p_note')
+.value =
+'';
+
+
+document
+.getElementById('modal')
+.classList
+.add('show');
+
+}
+
+
+function editItem(id){
+
+const item =
+items.find(
+  x => x.id === id
+);
+
+
+if(!item){
+  return;
+}
+
+
+editingId =
+id;
+
+
+document
+.getElementById('title')
+.textContent =
+'编辑物品';
+
+
+document
+.getElementById('p_name')
+.value =
+item.name;
+
+
+document
+.getElementById('p_category')
+.value =
+item.category;
+
+
+document
+.getElementById('p_checked')
+.value =
+String(
+  item.checked
+);
+
+
+document
+.getElementById('p_note')
+.value =
+item.note || '';
+
+
+document
+.getElementById('modal')
+.classList
+.add('show');
+
+}
+
+
+function closeModal(){
+
+document
+.getElementById('modal')
+.classList
+.remove('show');
+
+}
+
+
+function saveItem(){
+
+const data = {
+
+  name:
+  document
+  .getElementById('p_name')
+  .value
+  .trim(),
+
+  category:
+  document
+  .getElementById('p_category')
+  .value,
+
+  checked:
+  document
+  .getElementById('p_checked')
+  .value
+  ===
+  'true',
+
+  note:
+  document
+  .getElementById('p_note')
+  .value
+  .trim()
+
+};
+
+
+if(
+  !data.name
+){
+
+  alert(
+    '请输入物品名称。'
+  );
+
+  return;
+
+}
+
+
+if(editingId){
+
+  Object.assign(
+    items.find(
+      x => x.id === editingId
+    ),
+    data
+  );
+
+}else{
+
+  data.id =
+  Date.now();
+
+  items.push(data);
+
+}
+
+
+closeModal();
+
+save();
+
+}
+
+
+function removeItem(id){
+
+const item =
+items.find(
+  x => x.id === id
+);
+
+
+if(!item){
+  return;
+}
+
+
+if(
+  confirm(
+    '确定删除“'
+    +
+    item.name
+    +
+    '”吗？'
+  )
+){
+
+  items =
+  items.filter(
+    x => x.id !== id
+  );
+
+
+  save();
+
+}
+
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>
