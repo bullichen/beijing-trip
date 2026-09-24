@@ -5,102 +5,448 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2563eb">
 <title>北京十一旅行助手</title>
+
 <style>
-:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e5e7eb;--blue:#2563eb;--green:#16a34a;--orange:#ea580c}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
-.wrap{max-width:760px;margin:auto;padding:22px 14px 70px}
-.hero{padding:24px 4px 18px}
-.kicker{font-size:13px;color:#2563eb;font-weight:800;margin-bottom:8px}
-h1{font-size:28px;line-height:1.2;margin:0 0 10px}
-.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0 22px}
-.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:13px;text-align:center}
-.stat b{display:block;font-size:22px}
-.stat span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
-.section-title{font-size:14px;color:#64748b;font-weight:800;margin:8px 3px 9px}
-.menu-card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px;margin-bottom:11px;box-shadow:0 2px 5px rgba(15,23,42,.03)}
-.menu-row{display:flex;gap:13px;align-items:center}
-.icon{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font-size:25px;background:#eef4ff}
-.icon.green{background:#ecfdf5}
-.menu-main{flex:1;min-width:0}
-.menu-main h2{font-size:17px;margin:0 0 5px}
-.menu-main p{font-size:12px;color:var(--muted);margin:0;line-height:1.5}
-.arrow{font-size:23px;color:#94a3b8}
-.badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
-.badge{font-size:11px;padding:5px 8px;border-radius:999px;background:#f1f5f9;color:#475569}
-.tip{background:#eff6ff;border:1px solid #dbeafe;color:#1e40af;border-radius:15px;padding:13px;font-size:12px;line-height:1.7;margin-top:18px}
-.footer{font-size:11px;color:#94a3b8;text-align:center;margin-top:26px}
+:root{
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#172033;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --blue:#2563eb;
+  --green:#16a34a;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "PingFang SC",
+  "Microsoft YaHei",
+  sans-serif;
+}
+
+.wrap{
+  max-width:760px;
+  margin:auto;
+  padding:22px 14px 70px;
+}
+
+.hero{
+  padding:24px 4px 18px;
+}
+
+.kicker{
+  font-size:13px;
+  color:#2563eb;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+h1{
+  font-size:28px;
+  line-height:1.2;
+  margin:0 0 10px;
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+}
+
+.summary{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin:12px 0 22px;
+}
+
+.stat{
+  background:white;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:13px;
+  text-align:center;
+}
+
+.stat b{
+  display:block;
+  font-size:22px;
+}
+
+.stat span{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.section-title{
+  font-size:14px;
+  color:#64748b;
+  font-weight:800;
+  margin:8px 3px 9px;
+}
+
+.menu-card{
+  display:block;
+  text-decoration:none;
+  color:inherit;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:17px;
+  margin-bottom:11px;
+  box-shadow:0 2px 5px rgba(15,23,42,.03);
+}
+
+.menu-row{
+  display:flex;
+  gap:13px;
+  align-items:center;
+}
+
+.icon{
+  width:50px;
+  height:50px;
+  border-radius:15px;
+  display:grid;
+  place-items:center;
+  font-size:25px;
+  background:#eef4ff;
+}
+
+.icon.green{
+  background:#ecfdf5;
+}
+
+.menu-main{
+  flex:1;
+  min-width:0;
+}
+
+.menu-main h2{
+  font-size:17px;
+  margin:0 0 5px;
+}
+
+.menu-main p{
+  font-size:12px;
+  color:var(--muted);
+  margin:0;
+  line-height:1.5;
+}
+
+.arrow{
+  font-size:23px;
+  color:#94a3b8;
+}
+
+.badge-row{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.badge{
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#f1f5f9;
+  color:#475569;
+}
+
+.tip{
+  background:#eff6ff;
+  border:1px solid #dbeafe;
+  color:#1e40af;
+  border-radius:15px;
+  padding:13px;
+  font-size:12px;
+  line-height:1.7;
+  margin-top:18px;
+}
+
+.footer{
+  font-size:11px;
+  color:#94a3b8;
+  text-align:center;
+  margin-top:26px;
+}
 </style>
 </head>
+
 <body>
+
 <main class="wrap">
+
   <section class="hero">
-    <div class="kicker">🇨🇳 2026 国庆 · 北京</div>
-    <h1>北京十一旅行助手</h1>
-    <p>从这里进入预约管理、行李准备等功能。首页、预约页和 Checklist 都拥有各自独立的网址。</p>
+
+    <div class="kicker">
+      🇨🇳 2026 国庆 · 北京
+    </div>
+
+    <h1>
+      北京十一旅行助手
+    </h1>
+
+    <p>
+      管理景点预约和出发前行李准备。
+      每个功能都有独立网址，可以直接进入。
+    </p>
+
   </section>
+
 
   <section class="summary">
-    <div class="stat"><b id="tripCount">0</b><span>全部行程</span></div>
-    <div class="stat"><b id="tripPending">0</b><span>待预约</span></div>
-    <div class="stat"><b id="packProgress">0%</b><span>行李完成</span></div>
+
+    <div class="stat">
+      <b id="tripCount">10</b>
+      <span>全部行程</span>
+    </div>
+
+    <div class="stat">
+      <b id="tripPending">8</b>
+      <span>待预约</span>
+    </div>
+
+    <div class="stat">
+      <b id="packProgress">0%</b>
+      <span>行李完成</span>
+    </div>
+
   </section>
 
-  <div class="section-title">功能</div>
 
-  <a class="menu-card" href="./reservations/">
-    <div class="menu-row">
-      <div class="icon">🗓️</div>
-      <div class="menu-main">
-        <h2>预约管家</h2>
-        <p>查看景点预约时间、倒计时、预约状态，并添加或编辑行程。</p>
-      </div>
-      <div class="arrow">›</div>
-    </div>
-    <div class="badge-row">
-      <span class="badge" id="pendingBadge">待预约 0</span>
-      <span class="badge" id="doneBadge">已完成 0</span>
-    </div>
-  </a>
-
-  <a class="menu-card" href="./packing/">
-    <div class="menu-row">
-      <div class="icon green">🧳</div>
-      <div class="menu-main">
-        <h2>行李 Checklist</h2>
-        <p>逐项检查证件、电子设备、衣物、洗护和出行用品。</p>
-      </div>
-      <div class="arrow">›</div>
-    </div>
-    <div class="badge-row">
-      <span class="badge" id="packBadge">已准备 0 / 0</span>
-    </div>
-  </a>
-
-  <div class="tip">
-    <b>独立 URL：</b><br>
-    首页：<code>/</code><br>
-    预约管家：<code>/reservations/</code><br>
-    行李 Checklist：<code>/packing/</code>
+  <div class="section-title">
+    功能
   </div>
 
-  <div class="footer">数据目前保存在当前浏览器，本版本仍不是多人共享数据库。</div>
+
+  <a
+    class="menu-card"
+    href="./reservations/"
+  >
+
+    <div class="menu-row">
+
+      <div class="icon">
+        🗓️
+      </div>
+
+      <div class="menu-main">
+
+        <h2>
+          预约管家
+        </h2>
+
+        <p>
+          查看景点预约日期、开放时间、倒计时和完成进度。
+        </p>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+
+    <div class="badge-row">
+
+      <span
+        class="badge"
+        id="pendingBadge"
+      >
+        待预约 8
+      </span>
+
+      <span
+        class="badge"
+        id="doneBadge"
+      >
+        已完成 1
+      </span>
+
+    </div>
+
+  </a>
+
+
+  <a
+    class="menu-card"
+    href="./packing/"
+  >
+
+    <div class="menu-row">
+
+      <div class="icon green">
+        🧳
+      </div>
+
+      <div class="menu-main">
+
+        <h2>
+          行李 Checklist
+        </h2>
+
+        <p>
+          逐项检查证件、电子设备、衣物、洗护用品和其他必需品。
+        </p>
+
+      </div>
+
+      <div class="arrow">
+        ›
+      </div>
+
+    </div>
+
+
+    <div class="badge-row">
+
+      <span
+        class="badge"
+        id="packBadge"
+      >
+        已准备 0 / 20
+      </span>
+
+    </div>
+
+  </a>
+
+
+  <div class="tip">
+
+    <b>页面地址：</b>
+
+    <br>
+
+    首页：
+    <code>/</code>
+
+    <br>
+
+    预约管家：
+    <code>/reservations/</code>
+
+    <br>
+
+    行李 Checklist：
+    <code>/packing/</code>
+
+  </div>
+
+
+  <div class="footer">
+    当前数据保存在本机浏览器中，不同用户之间不会同步。
+  </div>
+
 </main>
 
+
 <script>
-const trips=JSON.parse(localStorage.getItem('beijing_october_trip_v1')||'[]');
-const packing=JSON.parse(localStorage.getItem('beijing_october_packing_v1')||'[]');
-const pending=trips.filter(x=>x.status==='pending').length;
-const done=trips.filter(x=>x.status==='done').length;
-const packDone=packing.filter(x=>x.checked).length;
-const pct=packing.length?Math.round(packDone/packing.length*100):0;
-document.getElementById('tripCount').textContent=trips.length || 10;
-document.getElementById('tripPending').textContent=trips.length ? pending : 8;
-document.getElementById('packProgress').textContent=pct+'%';
-document.getElementById('pendingBadge').textContent='待预约 '+(trips.length?pending:8);
-document.getElementById('doneBadge').textContent='已完成 '+(trips.length?done:1);
-document.getElementById('packBadge').textContent='已准备 '+packDone+' / '+packing.length;
+
+const trips =
+JSON.parse(
+  localStorage.getItem(
+    'beijing_october_trip_v1'
+  ) || '[]'
+);
+
+
+const packing =
+JSON.parse(
+  localStorage.getItem(
+    'beijing_october_packing_v1'
+  ) || '[]'
+);
+
+
+if(trips.length){
+
+  const pending =
+  trips.filter(
+    x => x.status === 'pending'
+  ).length;
+
+
+  const done =
+  trips.filter(
+    x => x.status === 'done'
+  ).length;
+
+
+  document
+  .getElementById('tripCount')
+  .textContent =
+  trips.length;
+
+
+  document
+  .getElementById('tripPending')
+  .textContent =
+  pending;
+
+
+  document
+  .getElementById('pendingBadge')
+  .textContent =
+  '待预约 ' + pending;
+
+
+  document
+  .getElementById('doneBadge')
+  .textContent =
+  '已完成 ' + done;
+
+}
+
+
+if(packing.length){
+
+  const done =
+  packing.filter(
+    x => x.checked
+  ).length;
+
+
+  const percent =
+  Math.round(
+    done / packing.length * 100
+  );
+
+
+  document
+  .getElementById('packProgress')
+  .textContent =
+  percent + '%';
+
+
+  document
+  .getElementById('packBadge')
+  .textContent =
+  '已准备 '
+  + done
+  + ' / '
+  + packing.length;
+
+}
+
 </script>
+
 </body>
 </html>
