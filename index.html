@@ -4,1227 +4,566 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2563eb">
-<title>北京十一预约管家</title>
-
+<title>北京十一旅行助手</title>
 <style>
 :root{
-  --bg:#f5f7fb;
-  --card:#fff;
-  --text:#172033;
-  --muted:#6b7280;
-  --line:#e5e7eb;
-  --blue:#2563eb;
-  --green:#16a34a;
-  --orange:#ea580c;
+  --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e5e7eb;
+  --blue:#2563eb;--green:#16a34a;--orange:#ea580c;--red:#dc2626;
+  --shadow:0 8px 30px rgba(15,23,42,.08)
 }
-
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,
-  "Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-}
-
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
 header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  background:rgba(245,247,251,.94);
-  backdrop-filter:blur(12px);
-  padding:14px 16px 10px;
-  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:20;background:rgba(245,247,251,.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line)
 }
-
-h1{
-  font-size:21px;
-  margin:0 0 4px;
+.header-inner{max-width:760px;margin:auto;padding:12px 14px;display:flex;align-items:center;gap:10px}
+.menu-btn{
+  width:42px;height:42px;border:0;border-radius:12px;background:#fff;color:#172033;
+  display:grid;place-items:center;font-size:22px;box-shadow:0 1px 3px rgba(0,0,0,.06)
 }
-
-.sub{
-  font-size:12px;
-  color:var(--muted);
-}
-
-.wrap{
-  max-width:760px;
-  margin:auto;
-  padding:12px 12px 90px;
-}
-
-.summary{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  margin-bottom:12px;
-}
-
-.stat{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:11px;
-  text-align:center;
-}
-
-.stat b{
-  display:block;
-  font-size:22px;
-}
-
-.stat span{
-  font-size:11px;
-  color:var(--muted);
-}
-
-.toolbar{
-  display:flex;
-  gap:8px;
-  margin:10px 0;
-}
-
-.toolbar button{
-  flex:1;
-}
-
+.header-copy{min-width:0}
+h1{font-size:20px;margin:0 0 3px}
+.sub{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wrap{max-width:760px;margin:auto;padding:12px 12px 90px}
+.page{display:none}
+.page.active{display:block}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px;text-align:center}
+.stat b{display:block;font-size:22px}
+.stat span{font-size:11px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;margin:10px 0;position:sticky;top:67px;z-index:8}
+.toolbar button{flex:1}
 button{
-  border:0;
-  border-radius:11px;
-  padding:10px 12px;
-  font-weight:600;
-  font-size:14px;
-  background:#e8eefc;
-  color:#174ea6;
+  border:0;border-radius:11px;padding:10px 12px;font-weight:650;font-size:14px;
+  background:#e8eefc;color:#174ea6
 }
-
-button.primary{
-  background:var(--blue);
-  color:white;
-}
-
-.day{
-  font-weight:800;
-  margin:18px 4px 8px;
-  font-size:16px;
-}
-
+button.primary{background:var(--blue);color:white}
+button.danger{background:#fee2e2;color:#b91c1c}
+.day,.section-title{font-weight:800;margin:18px 4px 8px;font-size:16px}
 .card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:13px;
-  margin-bottom:9px;
-  box-shadow:0 1px 2px rgba(0,0,0,.03);
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;
+  margin-bottom:9px;box-shadow:0 1px 2px rgba(0,0,0,.03)
 }
+.row{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.name{font-size:16px;font-weight:800}
+.date{font-size:12px;color:var(--muted);margin-top:3px}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tag{font-size:11px;border-radius:999px;padding:4px 7px;background:#f0f3f8;color:#4b5563}
+.tag.time{background:#eef2ff;color:#4338ca}
+.note{font-size:12px;color:#596274;line-height:1.5;margin-bottom:9px}
+.status{font-size:12px;font-weight:700;padding:5px 8px;border-radius:999px;white-space:nowrap;height:max-content}
+.pending{background:#fff7ed;color:var(--orange)}
+.done{background:#ecfdf5;color:var(--green)}
+.none{background:#f3f4f6;color:#6b7280}
+.actions{display:flex;gap:7px}
+.actions button{flex:1;padding:8px;font-size:12px}
+.countdown{font-size:12px;color:var(--blue);font-weight:700;margin-top:4px}
+.empty{text-align:center;color:var(--muted);padding:40px}
+.footer{font-size:11px;color:#8a93a3;text-align:center;margin-top:20px;line-height:1.6}
 
-.row{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
+/* Drawer */
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.38);z-index:39}
+.overlay.show{display:block}
+.drawer{
+  position:fixed;left:0;top:0;bottom:0;width:min(82vw,310px);background:white;z-index:40;
+  transform:translateX(-105%);transition:.22s ease;box-shadow:var(--shadow);padding:18px 12px
 }
-
-.name{
-  font-size:16px;
-  font-weight:800;
+.drawer.show{transform:translateX(0)}
+.drawer-head{padding:8px 10px 18px}
+.drawer-title{font-weight:900;font-size:19px}
+.drawer-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.nav-btn{
+  width:100%;display:flex;align-items:center;gap:11px;text-align:left;padding:12px 13px;
+  margin:4px 0;background:transparent;color:#334155;border-radius:12px
 }
+.nav-btn.active{background:#eef4ff;color:#1d4ed8}
+.nav-icon{font-size:19px;width:24px;text-align:center}
+.nav-text b{display:block;font-size:14px}
+.nav-text span{display:block;font-size:11px;color:#7c8798;margin-top:2px}
 
-.date{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:3px;
+/* Packing */
+.progress-card{background:linear-gradient(135deg,#eff6ff,#f8fbff);border:1px solid #dbeafe;border-radius:16px;padding:14px;margin-bottom:12px}
+.progress-top{display:flex;justify-content:space-between;align-items:end;gap:10px}
+.progress-num{font-size:24px;font-weight:900;color:#1d4ed8}
+.progress-label{font-size:12px;color:#64748b}
+.progress-track{height:9px;background:#dbeafe;border-radius:999px;overflow:hidden;margin-top:10px}
+.progress-fill{height:100%;width:0;background:#2563eb;border-radius:999px;transition:.2s}
+.pack-group{margin-top:16px}
+.pack-group-title{display:flex;justify-content:space-between;align-items:center;margin:0 4px 7px}
+.pack-group-title b{font-size:15px}
+.pack-group-title span{font-size:11px;color:var(--muted)}
+.pack-item{
+  display:flex;align-items:center;gap:10px;background:white;border:1px solid var(--line);
+  border-radius:13px;padding:11px 10px;margin-bottom:7px
 }
-
-.meta{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin:10px 0;
+.check-btn{
+  width:28px;height:28px;min-width:28px;border-radius:9px;border:1.5px solid #cbd5e1;background:white;
+  padding:0;color:white;display:grid;place-items:center;font-size:17px
 }
+.pack-item.checked .check-btn{background:var(--green);border-color:var(--green)}
+.pack-main{min-width:0;flex:1}
+.pack-name{font-size:14px;font-weight:700}
+.pack-item.checked .pack-name{text-decoration:line-through;color:#94a3b8}
+.pack-note{font-size:11px;color:#8791a1;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pack-actions{display:flex;gap:5px}
+.icon-btn{width:32px;height:32px;padding:0;border-radius:9px;background:#f2f5f9;color:#64748b}
+.filter-row{display:flex;gap:7px;margin-bottom:10px;overflow:auto}
+.filter-row button{white-space:nowrap;padding:8px 11px;font-size:12px}
+.filter-row button.active{background:#172033;color:white}
 
-.tag{
-  font-size:11px;
-  border-radius:999px;
-  padding:4px 7px;
-  background:#f0f3f8;
-  color:#4b5563;
-}
-
-.tag.time{
-  background:#eef2ff;
-  color:#4338ca;
-}
-
-.note{
-  font-size:12px;
-  color:#596274;
-  line-height:1.5;
-  margin-bottom:9px;
-}
-
-.status{
-  font-size:12px;
-  font-weight:700;
-  padding:5px 8px;
-  border-radius:999px;
-  white-space:nowrap;
-  height:max-content;
-}
-
-.pending{
-  background:#fff7ed;
-  color:var(--orange);
-}
-
-.done{
-  background:#ecfdf5;
-  color:var(--green);
-}
-
-.none{
-  background:#f3f4f6;
-  color:#6b7280;
-}
-
-.actions{
-  display:flex;
-  gap:7px;
-}
-
-.actions button{
-  flex:1;
-  padding:8px;
-  font-size:12px;
-}
-
-.countdown{
-  font-size:12px;
-  color:var(--blue);
-  font-weight:700;
-  margin-top:4px;
-}
-
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:40px;
-}
-
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  z-index:30;
-  align-items:flex-end;
-}
-
-.modal.show{
-  display:flex;
-}
-
+/* Modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;align-items:flex-end}
+.modal.show{display:flex}
 .sheet{
-  background:white;
-  width:100%;
-  max-width:760px;
-  margin:auto;
-  border-radius:20px 20px 0 0;
-  padding:17px;
-  max-height:92vh;
-  overflow:auto;
+  background:white;width:100%;max-width:760px;margin:auto;border-radius:20px 20px 0 0;
+  padding:17px;max-height:92vh;overflow:auto
 }
-
-.sheet h2{
-  margin:0 0 14px;
-  font-size:19px;
-}
-
-label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  color:#4b5563;
-  margin:10px 0 5px;
-}
-
-input,select,textarea{
-  width:100%;
-  border:1px solid #d7dce5;
-  border-radius:10px;
-  padding:10px;
-  font:inherit;
-  background:white;
-}
-
-textarea{
-  min-height:70px;
-  resize:vertical;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-.form-actions{
-  display:flex;
-  gap:8px;
-  margin-top:15px;
-}
-
-.form-actions button{
-  flex:1;
-}
-
-.tip{
-  background:#eff6ff;
-  border-radius:12px;
-  padding:10px;
-  font-size:12px;
-  color:#1e40af;
-  line-height:1.5;
-  margin-bottom:12px;
-}
-
-.footer{
-  font-size:11px;
-  color:#8a93a3;
-  text-align:center;
-  margin-top:20px;
-  line-height:1.5;
-}
-
+.sheet h2{margin:0 0 14px;font-size:19px}
+label{display:block;font-size:12px;font-weight:700;color:#4b5563;margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid #d7dce5;border-radius:10px;padding:10px;background:white}
+textarea{min-height:70px;resize:vertical}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.full{grid-column:1/-1}
+.form-actions{display:flex;gap:8px;margin-top:15px}
+.form-actions button{flex:1}
+.tip{background:#eff6ff;border-radius:12px;padding:10px;font-size:12px;color:#1e40af;line-height:1.5;margin-bottom:12px}
 @media(min-width:700px){
-  .modal{align-items:center}
-  .sheet{
-    border-radius:20px;
-    max-width:650px;
-  }
+  .modal{align-items:center}.sheet{border-radius:20px;max-width:650px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
-<div class="wrap" style="padding:0">
-<h1>🇨🇳 北京十一 · 预约管家</h1>
-<div class="sub" id="todayLine"></div>
-</div>
+  <div class="header-inner">
+    <button class="menu-btn" onclick="openDrawer()" aria-label="打开菜单">☰</button>
+    <div class="header-copy">
+      <h1 id="pageTitle">🇨🇳 北京十一 · 预约管家</h1>
+      <div class="sub" id="pageSubtitle"></div>
+    </div>
+  </div>
 </header>
+
+<div class="overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-title">北京十一旅行助手</div>
+    <div class="drawer-sub">行程预约与出发准备</div>
+  </div>
+  <button class="nav-btn active" id="navReservations" onclick="switchPage('reservations')">
+    <span class="nav-icon">🗓️</span>
+    <span class="nav-text"><b>预约管家</b><span>景点预约、倒计时和进度</span></span>
+  </button>
+  <button class="nav-btn" id="navPacking" onclick="switchPage('packing')">
+    <span class="nav-icon">🧳</span>
+    <span class="nav-text"><b>行李 Checklist</b><span>出发前逐项检查必需品</span></span>
+  </button>
+</aside>
 
 <main class="wrap">
 
-<div class="summary">
+  <section class="page active" id="page-reservations">
+    <div class="summary">
+      <div class="stat"><b id="total">0</b><span>全部行程</span></div>
+      <div class="stat"><b id="pending">0</b><span>待预约</span></div>
+      <div class="stat"><b id="done">0</b><span>已完成</span></div>
+    </div>
 
-<div class="stat">
-<b id="total">0</b>
-<span>全部行程</span>
-</div>
+    <div class="toolbar">
+      <button class="primary" onclick="openTripAdd()">＋ 添加行程</button>
+      <button onclick="exportTripData()">导出备份</button>
+      <button onclick="document.getElementById('importTripFile').click()">导入</button>
+      <input id="importTripFile" type="file" accept=".json" style="display:none" onchange="importTripData(event)">
+    </div>
 
-<div class="stat">
-<b id="pending">0</b>
-<span>待预约</span>
-</div>
+    <div id="tripList"></div>
 
-<div class="stat">
-<b id="done">0</b>
-<span>已完成</span>
-</div>
+    <div class="footer">
+      预约数据保存在当前浏览器。换设备或换浏览器时不会自动同步。<br>
+      建议重要修改后导出一次备份。
+    </div>
+  </section>
 
-</div>
+  <section class="page" id="page-packing">
+    <div class="progress-card">
+      <div class="progress-top">
+        <div>
+          <div class="progress-num" id="packProgressNum">0 / 0</div>
+          <div class="progress-label">已准备 / 全部物品</div>
+        </div>
+        <div class="progress-label" id="packPercent">0%</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="packProgressFill"></div></div>
+    </div>
 
-<div class="toolbar">
+    <div class="toolbar" style="position:static">
+      <button class="primary" onclick="openPackAdd()">＋ 添加物品</button>
+      <button onclick="markAllPacking(false)">全部取消</button>
+      <button onclick="markAllPacking(true)">全部完成</button>
+    </div>
 
-<button class="primary" onclick="openAdd()">
-＋ 添加行程
-</button>
+    <div class="filter-row" id="packingFilters">
+      <button class="active" data-filter="all" onclick="setPackingFilter('all',this)">全部</button>
+      <button data-filter="todo" onclick="setPackingFilter('todo',this)">未准备</button>
+      <button data-filter="done" onclick="setPackingFilter('done',this)">已准备</button>
+    </div>
 
-<button onclick="exportData()">
-导出备份
-</button>
+    <div id="packingList"></div>
 
-<button onclick="document.getElementById('importFile').click()">
-导入
-</button>
-
-<input
-id="importFile"
-type="file"
-accept=".json"
-style="display:none"
-onchange="importData(event)"
->
-
-</div>
-
-<div id="list"></div>
-
-<div class="footer">
-数据默认保存在当前浏览器。<br>
-可以使用“导出备份”保存自己的预约进度。
-</div>
+    <div class="footer">
+      Checklist 也保存在当前浏览器。你可以随时新增、编辑、删除或勾选物品。
+    </div>
+  </section>
 
 </main>
 
-<div class="modal" id="modal">
-
-<div class="sheet">
-
-<h2 id="modalTitle">添加行程</h2>
-
-<div class="tip">
-填写提前期后，系统会根据出行日期自动计算预约日期。
-预约日期仍然可以手动修改。
+<!-- Trip modal -->
+<div class="modal" id="tripModal">
+  <div class="sheet">
+    <h2 id="tripModalTitle">添加行程</h2>
+    <div class="tip">填写提前期后，可根据出行日期自动计算预约日期；也可以手动修改。</div>
+    <div class="grid">
+      <div class="full"><label>活动 / 景点</label><input id="f_name" placeholder="例如：故宫博物院"></div>
+      <div><label>出行日期</label><input id="f_visit" type="date"></div>
+      <div><label>预约时间</label><input id="f_time" type="time"></div>
+      <div><label>预约途径</label><input id="f_channel" placeholder="例如：故宫"></div>
+      <div><label>提前期</label><input id="f_lead" placeholder="例如：7天 / 随时 / /"></div>
+      <div><label>预约日期</label><input id="f_book" type="date"></div>
+      <div><label>状态</label>
+        <select id="f_status">
+          <option value="pending">待预约</option>
+          <option value="done">已预约</option>
+          <option value="none">无需预约</option>
+        </select>
+      </div>
+      <div class="full"><label>备注</label><textarea id="f_note" placeholder="例如：预约早上场次；20:00开始分批放票"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button onclick="closeTripModal()">取消</button>
+      <button class="primary" onclick="saveTripItem()">保存</button>
+    </div>
+  </div>
 </div>
 
-<div class="grid">
-
-<div class="full">
-<label>活动 / 景点</label>
-<input id="f_name" placeholder="例如：故宫博物院">
-</div>
-
-<div>
-<label>出行日期</label>
-<input id="f_visit" type="date">
-</div>
-
-<div>
-<label>预约时间</label>
-<input id="f_time" type="time">
-</div>
-
-<div>
-<label>预约途径</label>
-<input id="f_channel" placeholder="例如：故宫">
-</div>
-
-<div>
-<label>提前期</label>
-<input id="f_lead" placeholder="例如：7天">
-</div>
-
-<div>
-<label>预约日期</label>
-<input id="f_book" type="date">
-</div>
-
-<div>
-<label>状态</label>
-
-<select id="f_status">
-
-<option value="pending">
-待预约
-</option>
-
-<option value="done">
-已预约
-</option>
-
-<option value="none">
-无需预约
-</option>
-
-</select>
-
-</div>
-
-<div class="full">
-
-<label>备注</label>
-
-<textarea
-id="f_note"
-placeholder="例如：预约早上场次">
-</textarea>
-
-</div>
-
-</div>
-
-<div class="form-actions">
-
-<button onclick="closeModal()">
-取消
-</button>
-
-<button class="primary" onclick="saveItem()">
-保存
-</button>
-
-</div>
-
-</div>
+<!-- Packing modal -->
+<div class="modal" id="packModal">
+  <div class="sheet">
+    <h2 id="packModalTitle">添加物品</h2>
+    <div class="grid">
+      <div class="full"><label>物品名称</label><input id="p_name" placeholder="例如：充电宝"></div>
+      <div><label>分类</label>
+        <select id="p_category">
+          <option>证件与票务</option>
+          <option>电子设备</option>
+          <option>衣物</option>
+          <option>洗护用品</option>
+          <option>药品与健康</option>
+          <option>出行用品</option>
+          <option>其他</option>
+        </select>
+      </div>
+      <div><label>状态</label>
+        <select id="p_checked">
+          <option value="false">未准备</option>
+          <option value="true">已准备</option>
+        </select>
+      </div>
+      <div class="full"><label>备注</label><textarea id="p_note" placeholder="例如：身份证原件；容量不超过航空规定"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button onclick="closePackModal()">取消</button>
+      <button class="primary" onclick="savePackItem()">保存</button>
+    </div>
+  </div>
 </div>
 
 <script>
+/* ---------------- Shared navigation ---------------- */
+let currentPage = (location.hash || '#reservations').replace('#','');
+if(!['reservations','packing'].includes(currentPage)) currentPage='reservations';
 
-const KEY='beijing_october_trip_v1';
-
-let items =
-JSON.parse(localStorage.getItem(KEY) || 'null')
-||
-[
-
-{
-id:1,
-visit:'2026-10-02',
-name:'天安门升旗',
-channel:'小程序',
-lead:'7天',
-time:'12:00',
-book:'2026-09-25',
-note:'西红墙口？',
-status:'pending'
-},
-
-{
-id:2,
-visit:'2026-10-02',
-name:'中山公园',
-channel:'畅游公园',
-lead:'7天',
-time:'',
-book:'2026-09-25',
-note:'',
-status:'pending'
-},
-
-{
-id:3,
-visit:'2026-10-02',
-name:'故宫博物院',
-channel:'故宫',
-lead:'7天',
-time:'20:00',
-book:'2026-09-25',
-note:'预约早上场次，20:00开始分批放票',
-status:'pending'
-},
-
-{
-id:4,
-visit:'2026-10-02',
-name:'景山公园',
-channel:'畅游公园',
-lead:'/',
-time:'',
-book:'',
-note:'不需要提前预约',
-status:'none'
-},
-
-{
-id:5,
-visit:'2026-10-02',
-name:'恭王府',
-channel:'恭王府',
-lead:'10天',
-time:'20:00',
-book:'2026-09-22',
-note:'',
-status:'done'
-},
-
-{
-id:6,
-visit:'2026-10-03',
-name:'国家博物馆',
-channel:'国家博物馆',
-lead:'7天',
-time:'17:00',
-book:'2026-09-26',
-note:'预约早上场次',
-status:'pending'
-},
-
-{
-id:7,
-visit:'2026-10-03',
-name:'天坛公园',
-channel:'畅游公园',
-lead:'7天',
-time:'21:00',
-book:'2026-09-26',
-note:'全价联票',
-status:'pending'
-},
-
-{
-id:8,
-visit:'2026-10-04',
-name:'颐和园',
-channel:'畅游公园',
-lead:'7天',
-time:'21:00',
-book:'2026-09-27',
-note:'预约早上场次',
-status:'pending'
-},
-
-{
-id:9,
-visit:'2026-10-04',
-name:'清华大学',
-channel:'参观清华',
-lead:'8天',
-time:'17:00',
-book:'2026-09-26',
-note:'',
-status:'pending'
-},
-
-{
-id:10,
-visit:'2026-10-05',
-name:'长城',
-channel:'八达岭长城',
-lead:'随时',
-time:'',
-book:'',
-note:'',
-status:'pending'
+function openDrawer(){
+  document.getElementById('drawer').classList.add('show');
+  document.getElementById('drawerOverlay').classList.add('show');
 }
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('show');
+  document.getElementById('drawerOverlay').classList.remove('show');
+}
+function switchPage(page){
+  currentPage=page;
+  location.hash=page;
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.getElementById('navReservations').classList.toggle('active',page==='reservations');
+  document.getElementById('navPacking').classList.toggle('active',page==='packing');
+  if(page==='reservations'){
+    document.getElementById('pageTitle').textContent='🇨🇳 北京十一 · 预约管家';
+    document.getElementById('pageSubtitle').textContent='景点预约、开放倒计时和完成进度';
+  }else{
+    document.getElementById('pageTitle').textContent='🧳 北京十一 · 行李 Checklist';
+    document.getElementById('pageSubtitle').textContent='逐项检查出发前需要准备的东西';
+  }
+  closeDrawer();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.addEventListener('hashchange',()=>switchPage((location.hash||'#reservations').slice(1)));
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
+/* ---------------- Reservation manager ---------------- */
+const TRIP_KEY='beijing_october_trip_v1';
+let trips = JSON.parse(localStorage.getItem(TRIP_KEY) || 'null') || [
+ {id:1,visit:'2026-10-02',name:'天安门升旗',channel:'小程序',lead:'7天',time:'12:00',book:'2026-09-25',note:'西红墙口？',status:'pending'},
+ {id:2,visit:'2026-10-02',name:'中山公园',channel:'畅游公园',lead:'7天',time:'',book:'2026-09-25',note:'',status:'pending'},
+ {id:3,visit:'2026-10-02',name:'故宫博物院',channel:'故宫',lead:'7天',time:'20:00',book:'2026-09-25',note:'预约早上场次，20:00开始分批放票',status:'pending'},
+ {id:4,visit:'2026-10-02',name:'景山公园',channel:'畅游公园',lead:'/',time:'',book:'',note:'不需要提前预约',status:'none'},
+ {id:5,visit:'2026-10-02',name:'恭王府',channel:'恭王府',lead:'10天',time:'20:00',book:'2026-09-22',note:'',status:'done'},
+ {id:6,visit:'2026-10-03',name:'国家博物馆',channel:'国家博物馆',lead:'7天',time:'17:00',book:'2026-09-26',note:'预约早上场次',status:'pending'},
+ {id:7,visit:'2026-10-03',name:'天坛公园',channel:'畅游公园',lead:'7天',time:'21:00',book:'2026-09-26',note:'全价联票',status:'pending'},
+ {id:8,visit:'2026-10-04',name:'颐和园',channel:'畅游公园',lead:'7天',time:'21:00',book:'2026-09-27',note:'预约早上场次',status:'pending'},
+ {id:9,visit:'2026-10-04',name:'清华大学',channel:'参观清华',lead:'8天',time:'17:00',book:'2026-09-26',note:'',status:'pending'},
+ {id:10,visit:'2026-10-05',name:'长城',channel:'八达岭长城',lead:'随时',time:'',book:'',note:'',status:'pending'}
 ];
+let editingTripId=null;
 
-let editingId=null;
-
-function save(){
-
-localStorage.setItem(
-KEY,
-JSON.stringify(items)
-);
-
-render();
-
+function saveTrips(){
+  localStorage.setItem(TRIP_KEY,JSON.stringify(trips));
+  renderTrips();
 }
-
-function formatDate(d){
-
-if(!d) return '';
-
-return new Date(
-d+'T00:00:00'
-).toLocaleDateString(
-'zh-CN',
-{
-month:'numeric',
-day:'numeric',
-weekday:'short'
+function fmtDate(d){
+  return d?new Date(d+'T00:00:00').toLocaleDateString('zh-CN',{month:'numeric',day:'numeric',weekday:'short'}):'';
 }
-);
-
+function renderTrips(){
+  trips.sort((a,b)=>(a.visit||'').localeCompare(b.visit||''));
+  const groups={};
+  trips.forEach(x=>(groups[x.visit]??=[]).push(x));
+  document.getElementById('total').textContent=trips.length;
+  document.getElementById('pending').textContent=trips.filter(x=>x.status==='pending').length;
+  document.getElementById('done').textContent=trips.filter(x=>x.status==='done').length;
+  let out='';
+  for(const day of Object.keys(groups)){
+    out+=`<div class="day">${fmtDate(day)}</div>`;
+    groups[day].forEach(x=>{
+      const cls=x.status==='done'?'done':x.status==='none'?'none':'pending';
+      const label=x.status==='done'?'✓ 已预约':x.status==='none'?'无需预约':'待预约';
+      const cd=x.book?countdown(x.book,x.time):'';
+      out+=`<div class="card" onclick="openTripEdit(${x.id})">
+        <div class="row">
+          <div><div class="name">${esc(x.name)}</div><div class="date">出行：${x.visit}</div></div>
+          <span class="status ${cls}">${label}</span>
+        </div>
+        <div class="meta">
+          ${x.channel?`<span class="tag">📱 ${esc(x.channel)}</span>`:''}
+          ${x.lead?`<span class="tag">提前 ${esc(x.lead)}</span>`:''}
+          ${x.time?`<span class="tag time">⏰ ${esc(x.time)}</span>`:''}
+          ${x.book?`<span class="tag">📅 ${x.book}</span>`:''}
+        </div>
+        ${cd?`<div class="countdown">${cd}</div>`:''}
+        ${x.note?`<div class="note">${esc(x.note)}</div>`:''}
+        <div class="actions">
+          <button onclick="event.stopPropagation();toggleTripStatus(${x.id})">${x.status==='done'?'改为待预约':'标记已预约'}</button>
+          <button onclick="event.stopPropagation();openTripEdit(${x.id})">编辑</button>
+          <button onclick="event.stopPropagation();removeTripItem(${x.id})">删除</button>
+        </div>
+      </div>`;
+    });
+  }
+  document.getElementById('tripList').innerHTML=out||'<div class="empty">还没有行程，点击“添加行程”开始。</div>';
 }
-
-function render(){
-
-items.sort(
-(a,b)=>
-(a.visit||'').localeCompare(b.visit||'')
-);
-
-const groups={};
-
-items.forEach(x=>{
-
-if(!groups[x.visit])
-groups[x.visit]=[];
-
-groups[x.visit].push(x);
-
-});
-
-document.getElementById(
-'todayLine'
-).textContent=
-'今天 '+new Date().toLocaleDateString('zh-CN')
-+' · 点击行程卡片可以编辑';
-
-document.getElementById(
-'total'
-).textContent=items.length;
-
-document.getElementById(
-'pending'
-).textContent=
-items.filter(
-x=>x.status==='pending'
-).length;
-
-document.getElementById(
-'done'
-).textContent=
-items.filter(
-x=>x.status==='done'
-).length;
-
-let out='';
-
-for(const day of Object.keys(groups)){
-
-out+=
-`<div class="day">
-${formatDate(day)}
-</div>`;
-
-groups[day].forEach(x=>{
-
-const cls=
-x.status==='done'
-?'done'
-:x.status==='none'
-?'none'
-:'pending';
-
-const label=
-x.status==='done'
-?'✓ 已预约'
-:x.status==='none'
-?'无需预约'
-:'待预约';
-
-const cd=
-x.book
-?countdown(x.book,x.time)
-:'';
-
-out+=`
-
-<div
-class="card"
-onclick="openEdit(${x.id})"
->
-
-<div class="row">
-
-<div>
-
-<div class="name">
-${escapeHTML(x.name)}
-</div>
-
-<div class="date">
-出行：${x.visit}
-</div>
-
-</div>
-
-<span class="status ${cls}">
-${label}
-</span>
-
-</div>
-
-<div class="meta">
-
-${x.channel
-?`<span class="tag">
-📱 ${escapeHTML(x.channel)}
-</span>`
-:''}
-
-${x.lead
-?`<span class="tag">
-提前 ${escapeHTML(x.lead)}
-</span>`
-:''}
-
-${x.time
-?`<span class="tag time">
-⏰ ${escapeHTML(x.time)}
-</span>`
-:''}
-
-${x.book
-?`<span class="tag">
-📅 ${x.book}
-</span>`
-:''}
-
-</div>
-
-${cd
-?`<div class="countdown">
-${cd}
-</div>`
-:''}
-
-${x.note
-?`<div class="note">
-${escapeHTML(x.note)}
-</div>`
-:''}
-
-<div class="actions">
-
-<button
-onclick="
-event.stopPropagation();
-toggleStatus(${x.id})
-"
->
-
-${x.status==='done'
-?'改为待预约'
-:'标记已预约'}
-
-</button>
-
-<button
-onclick="
-event.stopPropagation();
-openEdit(${x.id})
-"
->
-编辑
-</button>
-
-<button
-onclick="
-event.stopPropagation();
-removeItem(${x.id})
-"
->
-删除
-</button>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-document.getElementById(
-'list'
-).innerHTML=
-out ||
-'<div class="empty">还没有行程</div>';
-
-}
-
 function countdown(book,time){
-
-const now=new Date();
-
-const target=
-new Date(
-book+'T'+
-(time||'00:00')+
-':00'
-);
-
-if(isNaN(target))
-return '';
-
-const ms=
-target-now;
-
-if(ms>0){
-
-const d=
-Math.floor(ms/86400000);
-
-const h=
-Math.floor(ms/3600000)%24;
-
-const m=
-Math.floor(ms/60000)%60;
-
-return '距离预约开放：'
-+(d?d+'天 ':'')
-+h+'小时'
-+m+'分钟';
-
+  const now=new Date(),target=new Date(book+'T'+(time||'00:00')+':00');
+  if(isNaN(target)) return '';
+  const ms=target-now;
+  if(ms>0){
+    const d=Math.floor(ms/86400000),h=Math.floor(ms/3600000)%24,m=Math.floor(ms/60000)%60;
+    return `距离预约开放：${d?d+'天 ':''}${h}小时${m}分钟`;
+  }
+  if(now.toDateString()===target.toDateString()) return '⚠️ 今天是预约开放日';
+  return '预约开放时间已到';
 }
-
-if(
-now.toDateString()
-===
-target.toDateString()
-)
-
-return '⚠️ 今天是预约开放日';
-
-return '预约开放时间已到';
-
+function openTripAdd(){
+  editingTripId=null;
+  document.getElementById('tripModalTitle').textContent='添加行程';
+  ['f_name','f_visit','f_time','f_channel','f_lead','f_book','f_note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_status').value='pending';
+  document.getElementById('tripModal').classList.add('show');
 }
-
-function escapeHTML(s){
-
-return String(s??'')
-.replace(
-/[&<>"']/g,
-c=>({
-'&':'&amp;',
-'<':'&lt;',
-'>':'&gt;',
-'"':'&quot;',
-"'":'&#39;'
-}[c])
-);
-
+function openTripEdit(id){
+  const x=trips.find(i=>i.id===id);if(!x)return;
+  editingTripId=id;
+  document.getElementById('tripModalTitle').textContent='编辑行程';
+  document.getElementById('f_name').value=x.name;
+  document.getElementById('f_visit').value=x.visit;
+  document.getElementById('f_time').value=x.time||'';
+  document.getElementById('f_channel').value=x.channel||'';
+  document.getElementById('f_lead').value=x.lead||'';
+  document.getElementById('f_book').value=x.book||'';
+  document.getElementById('f_status').value=x.status;
+  document.getElementById('f_note').value=x.note||'';
+  document.getElementById('tripModal').classList.add('show');
 }
-
-function openAdd(){
-
-editingId=null;
-
-document.getElementById(
-'modalTitle'
-).textContent=
-'添加行程';
-
-[
-'f_name',
-'f_visit',
-'f_time',
-'f_channel',
-'f_lead',
-'f_book',
-'f_note'
-]
-.forEach(
-id=>
-document.getElementById(id).value=''
-);
-
-document.getElementById(
-'f_status'
-).value='pending';
-
-document.getElementById(
-'modal'
-).classList.add('show');
-
+function closeTripModal(){document.getElementById('tripModal').classList.remove('show')}
+function field(id){return document.getElementById(id).value.trim()}
+function saveTripItem(){
+  const data={name:field('f_name'),visit:field('f_visit'),time:field('f_time'),channel:field('f_channel'),lead:field('f_lead'),book:field('f_book'),status:field('f_status'),note:field('f_note')};
+  if(!data.name||!data.visit){alert('请至少填写“活动”和“出行日期”。');return}
+  if(editingTripId) Object.assign(trips.find(i=>i.id===editingTripId),data);
+  else{data.id=Date.now();trips.push(data)}
+  closeTripModal();saveTrips();
 }
-
-function openEdit(id){
-
-const x=
-items.find(
-i=>i.id===id
-);
-
-if(!x)
-return;
-
-editingId=id;
-
-document.getElementById(
-'modalTitle'
-).textContent=
-'编辑行程';
-
-document.getElementById(
-'f_name'
-).value=x.name;
-
-document.getElementById(
-'f_visit'
-).value=x.visit;
-
-document.getElementById(
-'f_time'
-).value=x.time||'';
-
-document.getElementById(
-'f_channel'
-).value=x.channel||'';
-
-document.getElementById(
-'f_lead'
-).value=x.lead||'';
-
-document.getElementById(
-'f_book'
-).value=x.book||'';
-
-document.getElementById(
-'f_status'
-).value=x.status;
-
-document.getElementById(
-'f_note'
-).value=x.note||'';
-
-document.getElementById(
-'modal'
-).classList.add('show');
-
+function toggleTripStatus(id){
+  const x=trips.find(i=>i.id===id);
+  x.status=x.status==='done'?'pending':'done';
+  saveTrips();
 }
-
-function closeModal(){
-
-document.getElementById(
-'modal'
-).classList.remove('show');
-
+function removeTripItem(id){
+  if(confirm('确定删除这条行程吗？')){trips=trips.filter(x=>x.id!==id);saveTrips()}
 }
-
 function autoBook(){
+  const visit=field('f_visit'),lead=field('f_lead'),m=lead.match(/(\d+)/);
+  if(visit&&m){
+    const d=new Date(visit+'T00:00:00');d.setDate(d.getDate()-Number(m[1]));
+    document.getElementById('f_book').value=d.toISOString().slice(0,10);
+  }
+}
+document.getElementById('f_visit').addEventListener('change',autoBook);
+document.getElementById('f_lead').addEventListener('change',autoBook);
 
-const visit=
-document.getElementById(
-'f_visit'
-).value;
-
-const lead=
-document.getElementById(
-'f_lead'
-).value.trim();
-
-const m=
-lead.match(/(\d+)/);
-
-if(visit && m){
-
-const d=
-new Date(
-visit+'T00:00:00'
-);
-
-d.setDate(
-d.getDate()-Number(m[1])
-);
-
-document.getElementById(
-'f_book'
-).value=
-d.toISOString().slice(0,10);
-
+function exportTripData(){
+  const blob=new Blob([JSON.stringify(trips,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='北京十一预约行程备份.json';a.click();URL.revokeObjectURL(a.href);
+}
+function importTripData(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d))throw 0;trips=d;saveTrips();alert('导入成功')}catch{alert('文件格式不正确')}};
+  r.readAsText(file);e.target.value='';
 }
 
+/* ---------------- Packing checklist ---------------- */
+const PACK_KEY='beijing_october_packing_v1';
+const defaultPacking=[
+  {id:101,name:'身份证',category:'证件与票务',note:'原件随身携带',checked:false},
+  {id:102,name:'手机',category:'电子设备',note:'出门前充满电',checked:false},
+  {id:103,name:'充电器 / 数据线',category:'电子设备',note:'确认接口匹配',checked:false},
+  {id:104,name:'充电宝',category:'电子设备',note:'提前充满电',checked:false},
+  {id:105,name:'耳机',category:'电子设备',note:'高铁/飞机途中使用',checked:false},
+  {id:106,name:'换洗上衣',category:'衣物',note:'按行程天数准备',checked:false},
+  {id:107,name:'裤子',category:'衣物',note:'舒适、方便步行',checked:false},
+  {id:108,name:'外套',category:'衣物',note:'北京早晚温差较大时备用',checked:false},
+  {id:109,name:'舒适的鞋',category:'衣物',note:'景点步行较多',checked:false},
+  {id:110,name:'牙刷 / 牙膏',category:'洗护用品',note:'',checked:false},
+  {id:111,name:'洗面奶 / 护肤品',category:'洗护用品',note:'按个人需要',checked:false},
+  {id:112,name:'防晒霜',category:'洗护用品',note:'户外行程使用',checked:false},
+  {id:113,name:'常用药',category:'药品与健康',note:'个人长期用药优先',checked:false},
+  {id:114,name:'创可贴',category:'药品与健康',note:'步行磨脚等情况备用',checked:false},
+  {id:115,name:'纸巾 / 湿巾',category:'出行用品',note:'',checked:false},
+  {id:116,name:'雨伞',category:'出行用品',note:'晴雨两用更方便',checked:false},
+  {id:117,name:'水杯',category:'出行用品',note:'',checked:false},
+  {id:118,name:'口罩',category:'出行用品',note:'按个人需要',checked:false},
+  {id:119,name:'小背包',category:'出行用品',note:'景点当天随身携带',checked:false},
+  {id:120,name:'预约信息 / 订单截图',category:'证件与票务',note:'重要预约建议提前截图',checked:false}
+];
+let packing=JSON.parse(localStorage.getItem(PACK_KEY)||'null')||defaultPacking;
+let editingPackId=null;
+let packingFilter='all';
+
+function savePacking(){
+  localStorage.setItem(PACK_KEY,JSON.stringify(packing));
+  renderPacking();
+}
+function renderPacking(){
+  const total=packing.length,done=packing.filter(x=>x.checked).length,pct=total?Math.round(done/total*100):0;
+  document.getElementById('packProgressNum').textContent=`${done} / ${total}`;
+  document.getElementById('packPercent').textContent=`${pct}%`;
+  document.getElementById('packProgressFill').style.width=`${pct}%`;
+
+  const visible=packing.filter(x=>packingFilter==='all'||(packingFilter==='done'?x.checked:!x.checked));
+  const groups={};
+  visible.forEach(x=>(groups[x.category||'其他']??=[]).push(x));
+  const order=['证件与票务','电子设备','衣物','洗护用品','药品与健康','出行用品','其他'];
+  let out='';
+  [...order,...Object.keys(groups).filter(x=>!order.includes(x))].forEach(cat=>{
+    const arr=groups[cat];if(!arr||!arr.length)return;
+    const groupDone=arr.filter(x=>x.checked).length;
+    out+=`<div class="pack-group">
+      <div class="pack-group-title"><b>${esc(cat)}</b><span>${groupDone}/${arr.length}</span></div>`;
+    arr.forEach(x=>{
+      out+=`<div class="pack-item ${x.checked?'checked':''}">
+        <button class="check-btn" onclick="togglePack(${x.id})">${x.checked?'✓':''}</button>
+        <div class="pack-main" onclick="togglePack(${x.id})">
+          <div class="pack-name">${esc(x.name)}</div>
+          ${x.note?`<div class="pack-note">${esc(x.note)}</div>`:''}
+        </div>
+        <div class="pack-actions">
+          <button class="icon-btn" onclick="openPackEdit(${x.id})">✎</button>
+          <button class="icon-btn" onclick="removePack(${x.id})">×</button>
+        </div>
+      </div>`;
+    });
+    out+='</div>';
+  });
+  document.getElementById('packingList').innerHTML=out||'<div class="empty">当前筛选条件下没有物品。</div>';
+}
+function setPackingFilter(filter,btn){
+  packingFilter=filter;
+  document.querySelectorAll('#packingFilters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPacking();
+}
+function togglePack(id){
+  const x=packing.find(i=>i.id===id);if(!x)return;
+  x.checked=!x.checked;savePacking();
+}
+function markAllPacking(value){
+  packing.forEach(x=>x.checked=value);savePacking();
+}
+function openPackAdd(){
+  editingPackId=null;
+  document.getElementById('packModalTitle').textContent='添加物品';
+  document.getElementById('p_name').value='';
+  document.getElementById('p_category').value='出行用品';
+  document.getElementById('p_checked').value='false';
+  document.getElementById('p_note').value='';
+  document.getElementById('packModal').classList.add('show');
+}
+function openPackEdit(id){
+  const x=packing.find(i=>i.id===id);if(!x)return;
+  editingPackId=id;
+  document.getElementById('packModalTitle').textContent='编辑物品';
+  document.getElementById('p_name').value=x.name;
+  document.getElementById('p_category').value=x.category||'其他';
+  document.getElementById('p_checked').value=String(!!x.checked);
+  document.getElementById('p_note').value=x.note||'';
+  document.getElementById('packModal').classList.add('show');
+}
+function closePackModal(){document.getElementById('packModal').classList.remove('show')}
+function savePackItem(){
+  const data={
+    name:document.getElementById('p_name').value.trim(),
+    category:document.getElementById('p_category').value,
+    checked:document.getElementById('p_checked').value==='true',
+    note:document.getElementById('p_note').value.trim()
+  };
+  if(!data.name){alert('请输入物品名称。');return}
+  if(editingPackId) Object.assign(packing.find(i=>i.id===editingPackId),data);
+  else{data.id=Date.now();packing.push(data)}
+  closePackModal();savePacking();
+}
+function removePack(id){
+  const x=packing.find(i=>i.id===id);
+  if(x&&confirm(`确定删除“${x.name}”吗？`)){packing=packing.filter(i=>i.id!==id);savePacking()}
 }
 
-document.getElementById(
-'f_visit'
-).addEventListener(
-'change',
-autoBook
-);
-
-document.getElementById(
-'f_lead'
-).addEventListener(
-'change',
-autoBook
-);
-
-function saveItem(){
-
-const data={
-
-name:
-value('f_name'),
-
-visit:
-value('f_visit'),
-
-time:
-value('f_time'),
-
-channel:
-value('f_channel'),
-
-lead:
-value('f_lead'),
-
-book:
-value('f_book'),
-
-status:
-value('f_status'),
-
-note:
-value('f_note')
-
-};
-
-if(
-!data.name ||
-!data.visit
-){
-
-alert(
-'请至少填写活动和出行日期。'
-);
-
-return;
-
-}
-
-if(editingId){
-
-Object.assign(
-items.find(
-i=>i.id===editingId
-),
-data
-);
-
-}else{
-
-data.id=
-Date.now();
-
-items.push(data);
-
-}
-
-closeModal();
-
-save();
-
-}
-
-function value(id){
-
-return document
-.getElementById(id)
-.value
-.trim();
-
-}
-
-function toggleStatus(id){
-
-const x=
-items.find(
-i=>i.id===id
-);
-
-x.status=
-x.status==='done'
-?'pending'
-:'done';
-
-save();
-
-}
-
-function removeItem(id){
-
-if(
-confirm(
-'确定删除这条行程吗？'
-)
-){
-
-items=
-items.filter(
-x=>x.id!==id
-);
-
-save();
-
-}
-
-}
-
-function exportData(){
-
-const blob=
-new Blob(
-[
-JSON.stringify(
-items,
-null,
-2
-)
-],
-{
-type:'application/json'
-}
-);
-
-const a=
-document.createElement('a');
-
-a.href=
-URL.createObjectURL(blob);
-
-a.download=
-'北京十一预约行程备份.json';
-
-a.click();
-
-URL.revokeObjectURL(
-a.href
-);
-
-}
-
-function importData(e){
-
-const file=
-e.target.files[0];
-
-if(!file)
-return;
-
-const reader=
-new FileReader();
-
-reader.onload=()=>{
-
-try{
-
-const data=
-JSON.parse(
-reader.result
-);
-
-if(
-!Array.isArray(data)
-)
-throw 0;
-
-items=data;
-
-save();
-
-alert(
-'导入成功'
-);
-
-}catch{
-
-alert(
-'文件格式不正确'
-);
-
-}
-
-};
-
-reader.readAsText(file);
-
-e.target.value='';
-
-}
-
-render();
-
-setInterval(
-render,
-60000
-);
-
+/* Init */
+renderTrips();
+renderPacking();
+switchPage(currentPage);
+setInterval(renderTrips,60000);
 </script>
-
 </body>
 </html>
